@@ -28,6 +28,9 @@
 		<button onclick="settingAlarm()">
 			设置闹铃
 		</button>
+		<button onclick="open_map_frm()">
+			打开地图
+		</button>
 	</body>
 	<script type="text/javascript" src="../script/api.js"></script>
 	<script type="text/javascript" src="../script/common/common.js"></script>
@@ -74,6 +77,12 @@
 				})
 				settingAlarm()
 			});
+		}
+		open_map_frm = function(){
+			api.openWin({
+	            name: 'map_win',
+	            url: 'map_win.html'
+            });
 		}
 	</script>
 </html>

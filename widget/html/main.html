@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<style>
+			#con {
+				margin: 10px;
+				font-size: 24px;
+			}
+			ul {
+				margin-bottom: 10px;
+			}
+			ul li {
+				margin: 5px 10px;
+				padding: 5px;
+				color: #000;
+				word-wrap: break-word;
+			}
+		</style>
+	</head>
+	<body>
+		<label id="con">Hello APP</label>
+		<div id='sys-info'></div>
+		<button onclick="settingAlarm()">
+			设置闹铃
+		</button>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/common/common.js"></script>
+	<script type="text/javascript" src="../script/common/module.js"></script>
+	<script type="text/javascript">
+		var now = new Date()
+		var hour = now.getHours()
+		var minutes = now.getMinutes() + 1
+		apiready = function() {
+			settingAlarm()
+		};
+		settingAlarm = function() {
+			api.notification({
+				light : true,
+				notify : {
+					content : '发送位置',
+					updateCurrent : true
+				},
+				alarm : {
+					hour : hour,
+					minutes : minutes,
+					daysOfWeek : [1, 2, 3, 4, 5, 6, 7]
+				}
+			}, function(ret, err) {
+				api.cancelNotification({
+					id : ret.id
+				});
+				var newnow = new Date()
+				hour = newnow.getHours()
+				minutes = newnow.getMinutes() + 5
+//				api.toast({
+//					msg : '开始发送位置...'
+//				});
+				$module.map.getLocation(function(ret) {
+					if (ret) {
+						api.toast({
+							msg : '位置：' + JSON.stringify(ret)
+						});
+					} else {
+						api.toast({
+							msg : '位置发送失败...'
+						});
+					}
+				})
+				settingAlarm()
+			});
+		}
+	</script>
+</html>

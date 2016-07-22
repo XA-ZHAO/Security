@@ -31,6 +31,9 @@
 		<button onclick="open_map_frm()">
 			打开地图
 		</button>
+		<button onclick="close_timer()">
+			关闭定时器
+		</button>
 	</body>
 	<script type="text/javascript" src="../script/api.js"></script>
 	<script type="text/javascript" src="../script/common/common.js"></script>
@@ -40,8 +43,16 @@
 		var hour = now.getHours()
 		var minutes = now.getMinutes() + 1
 		apiready = function() {
-			settingAlarm()
+//			$module.alarmNotification.notification(function(){
+//				alert(11233)
+//			})
+			$module.alarmNotification.startAlarm()
 		};
+		
+		close_timer = function(){
+			$module.alarmNotification.stopAlarm()
+		}
+		
 		settingAlarm = function() {
 			api.notification({
 				light : true,

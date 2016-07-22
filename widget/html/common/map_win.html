@@ -26,15 +26,17 @@
 	<script type="text/javascript" src="../script/common/module.js"></script>
 	<script type="text/javascript">
 		apiready = function() {
-			var headerH = $('header').height()
+			var headerH = $api.offset($api.dom('header')).h
 			$module.map.getLocation(function(ret) {
 				$module.map.openMap({
 					x : 0,
 					y : headerH,
 					width : api.winWidth,
 					height : api.winHeight - headerH - 100
-				}, {lon : 116.297,
-							lat : 40.109}, function() {
+				}, {
+					lon : 116.297,
+					lat : 40.109
+				}, function() {
 					var map = api.require('bMap');
 					map.addBillboard({
 						id : 4,
@@ -94,21 +96,34 @@
 							icon : 'widget://image/bMap_car3.png'
 						}]
 					});
-					var map = api.require('bMap');
-					for (var i = 0; i < 6; i++) {
-						map.moveAnnotation({
-							id : 10 + i,
-							duration : 6,
-							end : {
-								lon : 116.3843839609304,
-								lat : 39.98964439091298
-							}
-						}, function(ret, err) {
-							alert(ret.id + '移动结束')
-						});
-					}
+					setTimeout(move, 10000)
 				})
 			})
 		};
+		function move() {
+			var map = api.require('bMap');
+			for (var i = 0; i < 6; i++) {
+				map.moveAnnotation({
+					id : 10 + i,
+					duration : 20,
+					end : {
+						lon : 116.3843839609304,
+						lat : 39.98964439091298
+					}
+				}, function(ret, err) {
+					alert(ret.id + '移动结束')
+				});
+			}
+			map.moveAnnotation({
+				id : 4,
+				duration : 20,
+				end : {
+					lon : 116.3843839609304,
+					lat : 39.98964439091298
+				}
+			}, function(ret, err) {
+				alert(ret.id + '移动结束')
+			});
+		}
 	</script>
 </html>

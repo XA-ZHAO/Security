@@ -124,12 +124,63 @@
 	 *　嵌入录音功能
 	 */
 	m.speechRecognizer = speechRecognizer_module
-
+	var alarm = null
 	/**
 	 * 闹钟功能模块
 	 */
 	var alarmNotification_module = {
-		
+		//自定义模块
+		startAlarm:function(){
+    		//时间都是毫秒数
+    		if(alarm == null)
+    			alarm = api.require('alarmModule');
+    		alarm.start({
+    			delayTime:2000,
+    			interval:5000
+    		},function(ret){
+    			alarm.check({
+    				message:ret
+    			})
+    		})    	
+		},
+		stopAlarm:function(){
+			alarm.stop(function(ret){
+    			alarm.check({
+    				message:ret
+    			})
+    		})
+		},
+	
+	
+		/**
+		 * 定时器 
+		 */
+		notification:function(callback){
+			var now = new Date()
+			var hour = now.getHours()
+			var minutes = now.getMinutes() + 1
+			api.notification({
+				light : true,
+				notify : {
+					content : '',
+					updateCurrent : true
+				},
+				alarm : {
+					hour : hour,
+					minutes : minutes,
+					daysOfWeek : [1, 2, 3, 4, 5, 6, 7]
+				}
+			}, function(ret, err) {
+				alert(JSON.stringify(ret)+"====="+JSON.stringify(err))
+//				api.cancelNotification({
+//					id : ret.id
+//				});
+//				if(typeof callback == 'function'){
+//					callback()
+//				}
+//				alarmNotification_module.notification(callback)
+			});
+		},		
 		/**
 		 * 设置闹钟
 		 */
@@ -144,12 +195,12 @@
 				isViberate : true, //不震动
 				isLed : true//不打开led
 			}, function(ret, err) {
-				alert(000)
-				if (ret) {
-					alert(JSON.stringify(ret));
-				} else {
-					alert(JSON.stringify(err));
-				}
+//				alert(000)
+//				if (ret) {
+//					alert(JSON.stringify(ret));
+//				} else {
+//					alert(JSON.stringify(err));
+//				}
 			});
 		},
 		/**
@@ -167,6 +218,9 @@
 				}
 			});
 		},
+		/**
+		 * 取消所有的闹钟 
+		 */
 		cancelAllAlarm : function(callback) {
 			var alarmNotification = api.require('alarmNotification');
 			alarmNotification.cancelAllAlarm(function(ret, err) {

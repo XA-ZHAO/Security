@@ -1,0 +1,15 @@
+1.登录			login
+2.问题上报			report
+3.核实核查			check
+4.待办案卷			waite
+5.关注件箱			cencern
+6.历史记录			history
+7.设置			setting
+8.使用帮助			help
+9.统计分析 			statistics
+10.人员分布		distribution
+11.我的草稿		draft
+12.领导审批		approval
+13.通知公告		notice
+14.日常工作上报		daily
+15.后台支撑		backstage

@@ -17,7 +17,10 @@
   <preference name="smartUpdate" value="false"/>  
   <preference name="debug" value="true"/>  
   <preference name="statusBarAppearance" value="true"/>  
+<<<<<<< HEAD
   <preference name="backgroundMode" value="location"/>  
+=======
+>>>>>>> 9a21e0230cae906bd0506ef701ffe619793fcb7a
   <permission name="readPhoneState"/>  
   <permission name="camera"/>  
   <permission name="record"/>  

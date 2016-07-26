@@ -6,6 +6,7 @@
 		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
 		<title>Hello APP</title>
 		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/lib/aui/aui.css" />
 		<style>
 			#con {
 				margin: 10px;
@@ -25,75 +26,75 @@
 	<body>
 		<label id="con">Hello APP</label>
 		<div id='sys-info'></div>
-		<button onclick="settingAlarm()">
+		<!--<div  onclick="settingAlarm()" class="aui-btn aui-btn-danger aui-btn-block aui-btn-outlined aui-btn-sm">
 			设置闹铃
-		</button>
-		<button onclick="open_map_frm()">
+		</div>
+		<div  onclick="open_map_frm()" class="aui-btn aui-btn-danger aui-btn-block aui-btn-outlined aui-btn-sm">
 			打开地图
-		</button>
-		<button onclick="close_timer()">
-			关闭定时器
-		</button>
+		</div>-->
+		<li onclick="open_location()" class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">开始定位</div>
+            </div>
+        </li>
+		 <li onclick="close_timer()" class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">关闭定时器</div>
+            </div>
+        </li>
 	</body>
 	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/common/base.js"></script>
+	<script type="text/javascript" src="../script/lib/jquery/jquery-1.10.1.js"></script>
+	<script type="text/javascript" src="../script/lib/jquery/jquery.md5.js"></script>
 	<script type="text/javascript" src="../script/common/common.js"></script>
 	<script type="text/javascript" src="../script/common/module.js"></script>
+	<script type="text/javascript" src="../script/common/webjs.js"></script>
 	<script type="text/javascript">
-		var now = new Date()
-		var hour = now.getHours()
-		var minutes = now.getMinutes() + 1
 		apiready = function() {
-//			$module.alarmNotification.notification(function(){
-//				alert(11233)
-//			})
-			$module.alarmNotification.startAlarm()
+			api.addEventListener({
+	            name:'online'
+            },function(ret,err){
+            	//coding...
+            	alert('联网')
+            });
 		};
-		
-		close_timer = function(){
-			$module.alarmNotification.stopAlarm()
-		}
-		
-		settingAlarm = function() {
-			api.notification({
-				light : true,
-				notify : {
-					content : '发送位置',
-					updateCurrent : true
-				},
-				alarm : {
-					hour : hour,
-					minutes : minutes,
-					daysOfWeek : [1, 2, 3, 4, 5, 6, 7]
-				}
-			}, function(ret, err) {
-				api.cancelNotification({
-					id : ret.id
-				});
-				var newnow = new Date()
-				hour = newnow.getHours()
-				minutes = newnow.getMinutes() + 5
-//				api.toast({
-//					msg : '开始发送位置...'
-//				});
-				$module.map.getLocation(function(ret) {
-					if (ret) {
-						api.toast({
-							msg : '位置：' + JSON.stringify(ret)
-						});
-					} else {
-						api.toast({
-							msg : '位置发送失败...'
-						});
-					}
-				})
-				settingAlarm()
+		open_map_frm = function() {
+			api.openWin({
+				name : 'map_win',
+				url : "common/map_win.html"
 			});
 		}
-		open_map_frm = function(){
-			api.openWin({
-	            name: 'map_win',
-	            url: 'map_win.html'
-            });
+		open_location = function() {
+			var sysType = api.systemType
+			alert(sysType)
+			if (sysType == 'ios') {
+				$module.map.getLocation(false, function(ret) {
+					var json = {
+						sysType : 'ios',
+						location : ret
+					}
+					jqueryWebJs(json)
+				})
+			} else {
+				$module.alarm.startAlarm(1000, 60000, function() {
+					$module.map.getLocation(true, function(ret) {
+						var json = {
+							sysType : 'android',
+							location : ret
+						}
+						jqueryWebJs(json)
+					})
+				})
+			}
+		}
+		
+		jqueryWebJs = function(request) {
+			webRequest("userService.login", request, false, function(data) {
+				console.log(JSON.stringify(data));
+			}, function(ret) {
+				console.log(JSON.stringify(ret));
+			});
 		}
 	</script>
 </html>
